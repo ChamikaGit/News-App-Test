@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.search.SearchFragment">
 
     <LinearLayout
@@ -38,7 +39,9 @@
             android:id="@+id/rvCategories"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/list_item_categories"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -49,7 +52,7 @@
             android:ellipsize="end"
             android:textSize="14sp"
             android:textColor="@color/black"
-            android:textStyle="normal"/>
+            android:textStyle="bold"/>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -64,7 +67,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvLatestNews"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/list_item_search_news"/>
 
             </LinearLayout>
 

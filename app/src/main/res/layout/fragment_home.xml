@@ -104,19 +104,22 @@
                     android:id="@+id/rvLatestNews"
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="16dp"
+                    tools:listitem="@layout/list_item_top_headlines"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCategories"
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="16dp"
+                    tools:listitem="@layout/list_item_categories"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCategoriesNews"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="16dp"
+                    tools:listitem="@layout/list_item_search_news"/>
 
 
 
