@@ -1,6 +1,7 @@
 package com.chamika.newsapptest.presentation.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by viewModels()
+    private val TAG = "MainActivity"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,8 +52,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleNavGraphDirection(navController: NavController) {
         val isUserLogged = mainViewModel.getLoginStatus()
+        Log.e(TAG, "login status $isUserLogged")
 
-        val navGraphId = if (isUserLogged!!) {
+        val navGraphId = if (isUserLogged == false) {
             R.navigation.login_nav_graph
         } else {
             R.navigation.dashboard_nav_graph

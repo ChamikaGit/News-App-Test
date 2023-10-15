@@ -8,5 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="bg_colour">#FFFFFFFF</color>
+    <color name="et_bg_colour">#C6BCBC</color>
+    <color name="bg_red_light">#F8655A</color>
+
 
 </resources>
