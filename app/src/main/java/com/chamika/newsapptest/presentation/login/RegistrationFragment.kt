@@ -1,32 +1,27 @@
 package com.chamika.newsapptest.presentation.login
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.chamika.newsapptest.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.chamika.newsapptest.databinding.FragmentRegistrationBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegistrationFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = RegistrationFragment()
-    }
-
-    private lateinit var viewModel: RegistrationViewModel
+    private var _binding: FragmentRegistrationBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: RegistrationViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_registration, container, false)
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentRegistrationBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(RegistrationViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
 }

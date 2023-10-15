@@ -10,5 +10,8 @@
     <color name="bg_colour">#252424</color>
     <color name="et_bg_colour">#434242</color>
     <color name="bg_red_light">#F8655A</color>
+    <color name="bg_blue_light">#0080FF</color>
+    <color name="et_gray_color">#818181</color>
+
 
 </resources>
