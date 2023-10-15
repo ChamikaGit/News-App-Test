@@ -1,10 +1,15 @@
 package com.chamika.newsapptest.presentation.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI.setupWithNavController
+import com.chamika.newsapptest.R
 import com.chamika.newsapptest.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -35,5 +40,63 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navController = navHostFragment.navController
+        setupWithNavController(binding.bottomNavigationView,navController)
+        handleNavGraphDirection(navController)
+
+    }
+
+    private fun handleNavGraphDirection(navController: NavController) {
+        val isUserLogged = mainViewModel.getLoginStatus()
+
+        val navGraphId = if (isUserLogged!!) {
+            R.navigation.login_nav_graph
+        } else {
+            R.navigation.dashboard_nav_graph
+        }
+
+        navController.graph = navController.navInflater.inflate(navGraphId)
+
+        if (navGraphId == R.navigation.dashboard_nav_graph) {
+            navController.graph.setStartDestination(R.id.homeFragment)
+        } else {
+            navController.graph.setStartDestination(R.id.loginFragment)
+//            navController.setGraph(
+//                navGraphId,
+//                LanguageFragmentArgs(isFromSettings = false).toBundle()
+//            )
+            navController.setGraph(navGraphId)
+        }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.favouriteFragment -> {
+                    bottomNavigationBarVisibility(isVisible = true)
+                }
+                R.id.homeFragment -> {
+                    bottomNavigationBarVisibility(isVisible = true)
+                }
+                R.id.profileFragment -> {
+                    bottomNavigationBarVisibility(isVisible = true)
+                }
+                R.id.searchFragment -> {
+                    bottomNavigationBarVisibility(isVisible = false)
+                }
+                else -> {
+                    bottomNavigationBarVisibility(isVisible = false)
+                }
+            }
+        }
+
+    }
+
+    private fun bottomNavigationBarVisibility(isVisible: Boolean) {
+        if (isVisible) {
+            binding.bottomNavigationView.visibility = View.VISIBLE
+        } else {
+            binding.bottomNavigationView.visibility = View.GONE
+        }
     }
 }
