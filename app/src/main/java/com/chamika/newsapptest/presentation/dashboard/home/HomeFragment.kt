@@ -5,10 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chamika.newsapptest.BuildConfig
+import com.chamika.newsapptest.R
 import com.chamika.newsapptest.data.util.Resource
 import com.chamika.newsapptest.databinding.FragmentHomeBinding
 import com.chamika.newsapptest.presentation.BaseFragment
@@ -49,6 +52,16 @@ class HomeFragment : BaseFragment() {
         viewModel.getNewsCategories(country = "us", category = viewModel.categoryType)
         iniRecyclerView()
         bindResponseData()
+        searchNavigation()
+    }
+
+    private fun searchNavigation() {
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+            }
+            true
+        }
     }
 
     private fun bindResponseData() {

@@ -26,12 +26,12 @@ interface NewsAPIService {
         apiKey: String = BuildConfig.API_KEY
     ): Response<TopHeadlineResponse>
 
-    @GET("top-headlines")
+    @GET("everything")
     suspend fun getSearchedTopHeadlines(
-        @Query("country")
-        country: String,
         @Query("q")
         query : String,
+        @Query("sortBy")
+        sortBy : String,
         @Query("apiKey")
         apiKey: String = BuildConfig.API_KEY
     ): Response<TopHeadlineResponse>

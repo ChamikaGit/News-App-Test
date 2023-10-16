@@ -26,13 +26,13 @@ class NewsRepositoryImpl(
     }
 
     override suspend fun searchedNews(
-        country: String,
-        searchQuery: String
+        searchQuery: String,
+        sortBy: String
     ): Resource<TopHeadlineResponse> {
         return responseToResource(
             apiService.getSearchedTopHeadlines(
-                country = country,
-                query = searchQuery
+                query = searchQuery,
+                sortBy = sortBy
             )
         )
     }
