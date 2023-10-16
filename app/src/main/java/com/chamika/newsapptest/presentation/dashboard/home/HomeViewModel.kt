@@ -21,6 +21,10 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
         MutableLiveData()
     var newsHeadlineLiveData: LiveData<Resource<TopHeadlineResponse>> = _newsHeadlineLiveData
 
+    private val _newsCategoryLiveData: MutableLiveData<Resource<TopHeadlineResponse>> =
+        MutableLiveData()
+    var newsCategoryLiveData: LiveData<Resource<TopHeadlineResponse>> = _newsCategoryLiveData
+
     private val categoriesList: ArrayList<String> =
         arrayListOf(
             "business",
@@ -31,6 +35,8 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
             "sports",
             "technology"
         )
+
+    var categoryType = categoriesList[0]
 
 
     fun getCategoriesList(): ArrayList<String> {
@@ -50,7 +56,19 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
         } catch (e: Exception) {
             _newsHeadlineLiveData.postValue(Resource.Error(e.message.toString()))
         }
+    }
 
-
+    fun getNewsCategories(country: String,category: String) = viewModelScope.launch(Dispatchers.IO) {
+        _newsCategoryLiveData.postValue(Resource.Loading())
+        try {
+            if (isNetworkAvailable.value == true) {
+                val apiResult = newsRepository.getCategoryNews(country = country, category = category)
+                _newsCategoryLiveData.postValue(apiResult)
+            } else {
+                _newsCategoryLiveData.postValue(Resource.Error(message = "Internet not available"))
+            }
+        } catch (e: Exception) {
+            _newsCategoryLiveData.postValue(Resource.Error(e.message.toString()))
+        }
     }
 }

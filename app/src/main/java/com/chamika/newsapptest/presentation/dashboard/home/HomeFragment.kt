@@ -46,13 +46,13 @@ class HomeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getNewsHeadLines(country = "us")
+        viewModel.getNewsCategories(country = "us", category = viewModel.categoryType)
         iniRecyclerView()
         bindResponseData()
     }
 
     private fun bindResponseData() {
         viewModel.newsHeadlineLiveData.observe(viewLifecycleOwner) { topHeadlineResponse ->
-
             topHeadlineResponse.data?.status?.let { responseStatus ->
                 if (responseStatus == "ok") {
                     when (topHeadlineResponse) {
@@ -65,7 +65,6 @@ class HomeFragment : BaseFragment() {
                                 if (BuildConfig.DEBUG)
                                     Log.e(TAG, "onViewCreated: ${it.size}")
                                 newsAdapter.setItemList(list = it)
-                                newsSearchAdapter.setItemList(list = it)
                             }
                         }
                         is Resource.Error -> {
@@ -86,6 +85,42 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
+
+        viewModel.newsCategoryLiveData.observe(viewLifecycleOwner) { categoryDataResponse ->
+            categoryDataResponse.data?.status?.let { responseStatus ->
+                if (responseStatus == "ok") {
+                    when (categoryDataResponse) {
+                        is Resource.Loading -> {
+                            binding.allNewsProgressBar.visibility = View.VISIBLE
+                        }
+                        is Resource.Success -> {
+                            binding.allNewsProgressBar.visibility = View.GONE
+                            categoryDataResponse.data.articles?.let {
+                                if (BuildConfig.DEBUG)
+                                    Log.e(TAG, "onViewCreated: ${it.size}")
+                                newsSearchAdapter.setItemList(list = it)
+                            }
+                        }
+                        is Resource.Error -> {
+                            binding.allNewsProgressBar.visibility = View.GONE
+                            Toast.makeText(
+                                requireContext(),
+                                categoryDataResponse.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        categoryDataResponse.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+        }
     }
 
 
@@ -98,9 +133,12 @@ class HomeFragment : BaseFragment() {
 
         })
 
-        newsCategoryListItemAdapter = NewsCategoryListItemAdapter(context = requireActivity(), clickListener = {
+        newsCategoryListItemAdapter =
+            NewsCategoryListItemAdapter(context = requireActivity(), clickListener = {
+                viewModel.categoryType = it
+                viewModel.getNewsCategories(country = "us", category = viewModel.categoryType)
 
-        })
+            })
 
         newsCategoryListItemAdapter.setItemList(viewModel.getCategoriesList())
 

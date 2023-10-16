@@ -7,22 +7,31 @@ import retrofit2.Response
 
 class NewsRepositoryImpl(
     private val apiService: NewsAPIService
-) :
-    NewsRepository {
+) : NewsRepository {
 
     override suspend fun getNewsHeadlines(country: String): Resource<TopHeadlineResponse> {
         return responseToResource(apiService.getTopHeadlines(country = country))
     }
 
+    override suspend fun getCategoryNews(
+        country: String,
+        category: String
+    ): Resource<TopHeadlineResponse> {
+        return responseToResource(
+            apiService.getCategoryHeadlines(
+                country = country,
+                category = category
+            )
+        )
+    }
+
     override suspend fun searchedNews(
         country: String,
-        page: Int,
         searchQuery: String
     ): Resource<TopHeadlineResponse> {
         return responseToResource(
             apiService.getSearchedTopHeadlines(
                 country = country,
-                page = page,
                 query = searchQuery
             )
         )
