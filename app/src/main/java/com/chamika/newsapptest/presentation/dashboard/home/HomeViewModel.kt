@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.chamika.newsapptest.data.models.TopHeadlineResponse
 import com.chamika.newsapptest.data.repository.NewsRepository
 import com.chamika.newsapptest.data.util.Resource
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,8 +17,25 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
 
     val isNetworkAvailable: MutableLiveData<Boolean> = MutableLiveData(true)
 
-    private val _newsHeadlineLiveData: MutableLiveData<Resource<TopHeadlineResponse>> = MutableLiveData()
+    private val _newsHeadlineLiveData: MutableLiveData<Resource<TopHeadlineResponse>> =
+        MutableLiveData()
     var newsHeadlineLiveData: LiveData<Resource<TopHeadlineResponse>> = _newsHeadlineLiveData
+
+    private val categoriesList: ArrayList<String> =
+        arrayListOf(
+            "business",
+            "entertainment",
+            "general",
+            "health",
+            "science",
+            "sports",
+            "technology"
+        )
+
+
+    fun getCategoriesList(): ArrayList<String> {
+        return categoriesList
+    }
 
 
     fun getNewsHeadLines(country: String) = viewModelScope.launch(Dispatchers.IO) {

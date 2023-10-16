@@ -12,7 +12,9 @@ import com.chamika.newsapptest.BuildConfig
 import com.chamika.newsapptest.data.util.Resource
 import com.chamika.newsapptest.databinding.FragmentHomeBinding
 import com.chamika.newsapptest.presentation.BaseFragment
+import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsCategoryListItemAdapter
 import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsHeaderListItemAdapter
+import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsSearchListItemAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +25,8 @@ class HomeFragment : BaseFragment() {
     private val viewModel: HomeViewModel by viewModels()
     private val TAG = "HomeFragment"
     private lateinit var newsAdapter: NewsHeaderListItemAdapter
+    private lateinit var newsSearchAdapter: NewsSearchListItemAdapter
+    private lateinit var newsCategoryListItemAdapter: NewsCategoryListItemAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +65,7 @@ class HomeFragment : BaseFragment() {
                                 if (BuildConfig.DEBUG)
                                     Log.e(TAG, "onViewCreated: ${it.size}")
                                 newsAdapter.setItemList(list = it)
+                                newsSearchAdapter.setItemList(list = it)
                             }
                         }
                         is Resource.Error -> {
@@ -89,13 +94,38 @@ class HomeFragment : BaseFragment() {
 
         })
 
-        val linearLayoutManager = LinearLayoutManager(
-            requireActivity(), LinearLayoutManager.HORIZONTAL,
-            false
-        )
+        newsSearchAdapter = NewsSearchListItemAdapter(context = requireActivity(), clickListener = {
+
+        })
+
+        newsCategoryListItemAdapter = NewsCategoryListItemAdapter(context = requireActivity(), clickListener = {
+
+        })
+
+        newsCategoryListItemAdapter.setItemList(viewModel.getCategoriesList())
+
         binding.rvLatestNews.apply {
             adapter = newsAdapter
-            layoutManager = linearLayoutManager
+            layoutManager = LinearLayoutManager(
+                requireActivity(), LinearLayoutManager.HORIZONTAL,
+                false
+            )
+        }
+
+        binding.rvCategoriesNews.apply {
+            adapter = newsSearchAdapter
+            layoutManager = LinearLayoutManager(
+                requireActivity(), LinearLayoutManager.VERTICAL,
+                false
+            )
+        }
+
+        binding.rvCategories.apply {
+            adapter = newsCategoryListItemAdapter
+            layoutManager = LinearLayoutManager(
+                requireActivity(), LinearLayoutManager.HORIZONTAL,
+                false
+            )
         }
     }
 }
