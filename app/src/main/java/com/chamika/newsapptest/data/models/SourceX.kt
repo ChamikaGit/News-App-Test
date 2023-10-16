@@ -1,11 +1,11 @@
 package com.chamika.newsapptest.data.models
 
-import com.google.gson.annotations.SerializedName
-import java.io.Serializable
 
-data class Source(
+import com.google.gson.annotations.SerializedName
+
+data class SourceX(
     @SerializedName("id")
-    val id: String?,
+    val id: String,
     @SerializedName("name")
-    val name: String?
-): Serializable
+    val name: String
+)

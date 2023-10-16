@@ -1,10 +1,8 @@
 package com.chamika.newsapptest.data.repository
 
 import com.chamika.newsapptest.data.api.NewsAPIService
-import com.chamika.newsapptest.data.models.APIResponse
-import com.chamika.newsapptest.data.models.Article
+import com.chamika.newsapptest.data.models.TopHeadlineResponse
 import com.chamika.newsapptest.data.util.Resource
-import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 class NewsRepositoryImpl(
@@ -12,16 +10,15 @@ class NewsRepositoryImpl(
 ) :
     NewsRepository {
 
-    override suspend fun getNewsHeadlines(country: String, page: Int): Resource<APIResponse> {
-
-        return responseToResource(apiService.getTopHeadlines(country = country, page = page))
+    override suspend fun getNewsHeadlines(country: String): Resource<TopHeadlineResponse> {
+        return responseToResource(apiService.getTopHeadlines(country = country))
     }
 
     override suspend fun searchedNews(
         country: String,
         page: Int,
         searchQuery: String
-    ): Resource<APIResponse> {
+    ): Resource<TopHeadlineResponse> {
         return responseToResource(
             apiService.getSearchedTopHeadlines(
                 country = country,
@@ -31,7 +28,7 @@ class NewsRepositoryImpl(
         )
     }
 
-    private fun responseToResource(response: Response<APIResponse>): Resource<APIResponse> {
+    private fun responseToResource(response: Response<TopHeadlineResponse>): Resource<TopHeadlineResponse> {
 
         if (response.isSuccessful) {
             response.body()?.let { result ->

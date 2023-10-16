@@ -1,12 +1,11 @@
 package com.chamika.newsapptest.data.models
-
 import com.google.gson.annotations.SerializedName
 
-data class APIResponse(
+data class TopHeadlineResponse(
     @SerializedName("articles")
-    val articles: List<Article>,
+    val articles: List<ArticleX>?,
     @SerializedName("status")
-    val status: String,
+    val status: String?,
     @SerializedName("totalResults")
-    val totalResults: Int
+    val totalResults: Int?
 )

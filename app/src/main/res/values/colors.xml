@@ -12,7 +12,8 @@
     <color name="bg_red_light">#F8655A</color>
     <color name="bg_blue_light">#0080FF</color>
     <color name="et_gray_color">#9C818181</color>
-    <color name="bg_black_trans">#34000000</color>
+    <color name="bg_black_trans">#63000000</color>
+    <color name="tv_color">#FF000000</color>
 
 
 

@@ -1,10 +1,9 @@
 package com.chamika.newsapptest.data.models
 
-import com.google.gson.annotations.SerializedName
-import java.io.Serializable
 
-data class Article(
-    val id :Int? = null,
+import com.google.gson.annotations.SerializedName
+
+data class ArticleX(
     @SerializedName("author")
     val author: String?,
     @SerializedName("content")
@@ -14,11 +13,11 @@ data class Article(
     @SerializedName("publishedAt")
     val publishedAt: String?,
     @SerializedName("source")
-    val source: Source?,
+    val source: SourceX?,
     @SerializedName("title")
     val title: String?,
     @SerializedName("url")
     val url: String?,
     @SerializedName("urlToImage")
     val urlToImage: String?
-) : Serializable
+)
