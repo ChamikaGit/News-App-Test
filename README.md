@@ -1,4 +1,4 @@
-# News App using [New](https://newsapi.org/)https://newsapi.org/
+# News App using (https://newsapi.org/)https://newsapi.org/
 News App
 Welcome to News App! This Android project is built with modern technologies and follows best practices for Android app development. Below is an overview of the project and the tech stack used.
 
