@@ -12,12 +12,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chamika.newsapptest.BuildConfig
 import com.chamika.newsapptest.R
+import com.chamika.newsapptest.data.models.HotNews
 import com.chamika.newsapptest.data.util.Resource
 import com.chamika.newsapptest.databinding.FragmentHomeBinding
 import com.chamika.newsapptest.presentation.BaseFragment
-import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsCategoryListItemAdapter
-import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsHeaderListItemAdapter
-import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsSearchListItemAdapter
+import com.chamika.newsapptest.presentation.adapter.NewsCategoryListItemAdapter
+import com.chamika.newsapptest.presentation.adapter.NewsHeaderListItemAdapter
+import com.chamika.newsapptest.presentation.adapter.NewsSearchListItemAdapter
 import com.chamika.newsapptest.presentation.utils.Constant
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -54,15 +55,26 @@ class HomeFragment : BaseFragment() {
         iniRecyclerView()
         bindResponseData()
         searchNavigation()
+
+        binding.seeAllContainer.setOnClickListener {
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToHotNewsFragment(viewModel.hotNewsListLiveData.value?.let { articleList ->
+                    HotNews(articleList)
+                })
+            findNavController().navigate(action)
+        }
     }
 
     private fun searchNavigation() {
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val bundle = Bundle().apply {
-                    putString(Constant.searchText, binding.etSearch.text.toString().trim())
+                val searchText = binding.etSearch.text.toString().trim()
+                if (searchText.isNotEmpty()) {
+                    val bundle = Bundle().apply {
+                        putString(Constant.searchText, searchText)
+                    }
+                    findNavController().navigate(R.id.action_homeFragment_to_searchFragment, bundle)
                 }
-                findNavController().navigate(R.id.action_homeFragment_to_searchFragment,bundle)
             }
             true
         }
@@ -81,7 +93,10 @@ class HomeFragment : BaseFragment() {
                             topHeadlineResponse.data.articles?.let {
                                 if (BuildConfig.DEBUG)
                                     Log.e(TAG, "onViewCreated: ${it.size}")
-                                newsAdapter.setItemList(list = it)
+                                if (it.size > 3) {
+                                    newsAdapter.setItemList(list = it.subList(0, 3))
+                                    viewModel.setHotNewsList(it)
+                                }
                             }
                         }
                         is Resource.Error -> {
@@ -147,7 +162,7 @@ class HomeFragment : BaseFragment() {
             val bundle = Bundle().apply {
                 putSerializable(Constant.article, it)
             }
-            findNavController().navigate(R.id.action_homeFragment_to_newsDetailsFragment,bundle)
+            findNavController().navigate(R.id.action_homeFragment_to_newsDetailsFragment, bundle)
 
         })
 
@@ -156,7 +171,7 @@ class HomeFragment : BaseFragment() {
             val bundle = Bundle().apply {
                 putSerializable(Constant.article, it)
             }
-            findNavController().navigate(R.id.action_homeFragment_to_newsDetailsFragment,bundle)
+            findNavController().navigate(R.id.action_homeFragment_to_newsDetailsFragment, bundle)
         })
 
         newsCategoryListItemAdapter =

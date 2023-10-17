@@ -162,7 +162,7 @@ Bailey, who was formerly the chief executive of the FCA, has long been a skeptic
                 android:layout_height="15dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/ic_back"
-                android:backgroundTint="@color/white" />
+                android:backgroundTint="@color/tv_color" />
 
         </RelativeLayout>
 

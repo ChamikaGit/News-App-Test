@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chamika.newsapptest.data.models.ArticleX
 import com.chamika.newsapptest.data.models.TopHeadlineResponse
 import com.chamika.newsapptest.data.repository.NewsRepository
 import com.chamika.newsapptest.data.util.Resource
@@ -24,6 +25,9 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
     private val _newsCategoryLiveData: MutableLiveData<Resource<TopHeadlineResponse>> =
         MutableLiveData()
     var newsCategoryLiveData: LiveData<Resource<TopHeadlineResponse>> = _newsCategoryLiveData
+
+    private val _hotNewsListLiveData = MutableLiveData<List<ArticleX>>()
+    val hotNewsListLiveData: LiveData<List<ArticleX>> = _hotNewsListLiveData
 
     private val categoriesList: ArrayList<String> =
         arrayListOf(
@@ -70,5 +74,10 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
         } catch (e: Exception) {
             _newsCategoryLiveData.postValue(Resource.Error(e.message.toString()))
         }
+    }
+
+
+    fun setHotNewsList(yourList: List<ArticleX>) {
+        _hotNewsListLiveData.value = yourList
     }
 }

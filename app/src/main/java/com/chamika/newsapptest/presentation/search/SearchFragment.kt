@@ -16,8 +16,8 @@ import com.chamika.newsapptest.R
 import com.chamika.newsapptest.data.util.Resource
 import com.chamika.newsapptest.databinding.FragmentSearchBinding
 import com.chamika.newsapptest.presentation.BaseFragment
-import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsCategoryListItemAdapter
-import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsSearchListItemAdapter
+import com.chamika.newsapptest.presentation.adapter.NewsCategoryListItemAdapter
+import com.chamika.newsapptest.presentation.adapter.NewsSearchListItemAdapter
 import com.chamika.newsapptest.presentation.utils.Constant
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -62,7 +62,7 @@ class SearchFragment : BaseFragment() {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 viewModel.getNewsSearchData(
                     sortBy = viewModel.sortBy,
-                    searchQuery = binding.etSearch.toString().trim()
+                    searchQuery = binding.etSearch.text.toString().trim()
                 )
             }
             true

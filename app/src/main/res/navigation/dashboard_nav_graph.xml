@@ -16,6 +16,10 @@
         <action
             android:id="@+id/action_homeFragment_to_newsDetailsFragment"
             app:destination="@id/newsDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_hotNewsFragment"
+            app:destination="@id/hotNewsFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/favouriteFragment"
@@ -52,4 +56,20 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+
+    <fragment
+        android:id="@+id/hotNewsFragment"
+        android:name="com.chamika.newsapptest.presentation.hotnews.HotNewsFragment"
+        android:label="fragment_hot_news"
+        tools:layout="@layout/fragment_hot_news" >
+        <argument
+            android:name="news_article_list"
+            app:argType="com.chamika.newsapptest.data.models.HotNews"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+        <action
+            android:id="@+id/action_hotNewsFragment_to_newsDetailsFragment"
+            app:destination="@id/newsDetailsFragment" />
+    </fragment>
+
 </navigation>

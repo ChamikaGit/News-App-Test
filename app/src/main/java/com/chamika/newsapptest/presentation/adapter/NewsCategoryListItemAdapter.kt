@@ -1,4 +1,4 @@
-package com.chamika.newsapptest.presentation.dashboard.home.adapter
+package com.chamika.newsapptest.presentation.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
