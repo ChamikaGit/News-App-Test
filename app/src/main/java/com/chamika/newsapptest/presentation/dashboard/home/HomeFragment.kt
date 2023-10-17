@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chamika.newsapptest.BuildConfig
@@ -21,6 +22,7 @@ import com.chamika.newsapptest.presentation.adapter.NewsHeaderListItemAdapter
 import com.chamika.newsapptest.presentation.adapter.NewsSearchListItemAdapter
 import com.chamika.newsapptest.presentation.utils.Constant
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment() {
@@ -81,77 +83,82 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun bindResponseData() {
-        viewModel.newsHeadlineLiveData.observe(viewLifecycleOwner) { topHeadlineResponse ->
-            topHeadlineResponse.data?.status?.let { responseStatus ->
-                if (responseStatus == "ok") {
-                    when (topHeadlineResponse) {
-                        is Resource.Loading -> {
-                            binding.allNewsProgressBar.visibility = View.VISIBLE
-                        }
-                        is Resource.Success -> {
-                            binding.allNewsProgressBar.visibility = View.GONE
-                            topHeadlineResponse.data.articles?.let {
-                                if (BuildConfig.DEBUG)
-                                    Log.e(TAG, "onViewCreated: ${it.size}")
-                                if (it.size > 3) {
-                                    newsAdapter.setItemList(list = it.subList(0, 3))
-                                    viewModel.setHotNewsList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.newsHeadlineSharedFlow.collect { topHeadlineResponse ->
+                topHeadlineResponse.data?.status?.let { responseStatus ->
+                    if (responseStatus == "ok") {
+                        when (topHeadlineResponse) {
+                            is Resource.Loading -> {
+                                binding.allNewsProgressBar.visibility = View.VISIBLE
+                            }
+                            is Resource.Success -> {
+                                binding.allNewsProgressBar.visibility = View.GONE
+                                topHeadlineResponse.data.articles?.let {
+                                    if (BuildConfig.DEBUG)
+                                        Log.e(TAG, "onViewCreated: ${it.size}")
+                                    if (it.size > 3) {
+                                        newsAdapter.setItemList(list = it.subList(0, 3))
+                                        viewModel.setHotNewsList(it)
+                                    }
                                 }
                             }
+                            is Resource.Error -> {
+                                binding.allNewsProgressBar.visibility = View.GONE
+                                Toast.makeText(
+                                    requireContext(),
+                                    topHeadlineResponse.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
-                        is Resource.Error -> {
-                            binding.allNewsProgressBar.visibility = View.GONE
-                            Toast.makeText(
-                                requireContext(),
-                                topHeadlineResponse.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            topHeadlineResponse.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        topHeadlineResponse.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
         }
 
-        viewModel.newsCategoryLiveData.observe(viewLifecycleOwner) { categoryDataResponse ->
-            categoryDataResponse.data?.status?.let { responseStatus ->
-                if (responseStatus == "ok") {
-                    when (categoryDataResponse) {
-                        is Resource.Loading -> {
-                            binding.allNewsProgressBar.visibility = View.VISIBLE
-                        }
-                        is Resource.Success -> {
-                            binding.allNewsProgressBar.visibility = View.GONE
-                            categoryDataResponse.data.articles?.let {
-                                if (BuildConfig.DEBUG)
-                                    Log.e(TAG, "onViewCreated: ${it.size}")
-                                newsSearchAdapter.setItemList(list = it)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.newsCategorySharedFlow.collect { categoryDataResponse ->
+                categoryDataResponse.data?.status?.let { responseStatus ->
+                    if (responseStatus == "ok") {
+                        when (categoryDataResponse) {
+                            is Resource.Loading -> {
+                                binding.allNewsProgressBar.visibility = View.VISIBLE
+                            }
+                            is Resource.Success -> {
+                                binding.allNewsProgressBar.visibility = View.GONE
+                                categoryDataResponse.data.articles?.let {
+                                    if (BuildConfig.DEBUG)
+                                        Log.e(TAG, "onViewCreated: ${it.size}")
+                                    newsSearchAdapter.setItemList(list = it)
+                                }
+                            }
+                            is Resource.Error -> {
+                                binding.allNewsProgressBar.visibility = View.GONE
+                                Toast.makeText(
+                                    requireContext(),
+                                    categoryDataResponse.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
-                        is Resource.Error -> {
-                            binding.allNewsProgressBar.visibility = View.GONE
-                            Toast.makeText(
-                                requireContext(),
-                                categoryDataResponse.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            categoryDataResponse.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        categoryDataResponse.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
+
+
             }
-
-
         }
     }
 

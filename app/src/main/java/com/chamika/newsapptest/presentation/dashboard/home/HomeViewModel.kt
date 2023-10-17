@@ -10,6 +10,7 @@ import com.chamika.newsapptest.data.repository.NewsRepository
 import com.chamika.newsapptest.data.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,13 +19,13 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
 
     val isNetworkAvailable: MutableLiveData<Boolean> = MutableLiveData(true)
 
-    private val _newsHeadlineLiveData: MutableLiveData<Resource<TopHeadlineResponse>> =
-        MutableLiveData()
-    var newsHeadlineLiveData: LiveData<Resource<TopHeadlineResponse>> = _newsHeadlineLiveData
+    private val _newsHeadlineSharedFlow: MutableSharedFlow<Resource<TopHeadlineResponse>> =
+        MutableSharedFlow()
+    var newsHeadlineSharedFlow: MutableSharedFlow<Resource<TopHeadlineResponse>> = _newsHeadlineSharedFlow
 
-    private val _newsCategoryLiveData: MutableLiveData<Resource<TopHeadlineResponse>> =
-        MutableLiveData()
-    var newsCategoryLiveData: LiveData<Resource<TopHeadlineResponse>> = _newsCategoryLiveData
+    private val _newsCategorySharedFlow: MutableSharedFlow<Resource<TopHeadlineResponse>> =
+        MutableSharedFlow()
+    var newsCategorySharedFlow: MutableSharedFlow<Resource<TopHeadlineResponse>> = _newsCategorySharedFlow
 
     private val _hotNewsListLiveData = MutableLiveData<List<ArticleX>>()
     val hotNewsListLiveData: LiveData<List<ArticleX>> = _hotNewsListLiveData
@@ -49,30 +50,30 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
 
 
     fun getNewsHeadLines(country: String) = viewModelScope.launch(Dispatchers.IO) {
-        _newsHeadlineLiveData.postValue(Resource.Loading())
+        _newsHeadlineSharedFlow.emit(Resource.Loading())
         try {
             if (isNetworkAvailable.value == true) {
                 val apiResult = newsRepository.getNewsHeadlines(country = country)
-                _newsHeadlineLiveData.postValue(apiResult)
+                _newsHeadlineSharedFlow.emit(apiResult)
             } else {
-                _newsHeadlineLiveData.postValue(Resource.Error(message = "Internet not available"))
+                _newsHeadlineSharedFlow.emit(Resource.Error(message = "Internet not available"))
             }
         } catch (e: Exception) {
-            _newsHeadlineLiveData.postValue(Resource.Error(e.message.toString()))
+            _newsHeadlineSharedFlow.emit(Resource.Error(e.message.toString()))
         }
     }
 
     fun getNewsCategories(country: String,category: String) = viewModelScope.launch(Dispatchers.IO) {
-        _newsCategoryLiveData.postValue(Resource.Loading())
+        _newsCategorySharedFlow.emit(Resource.Loading())
         try {
             if (isNetworkAvailable.value == true) {
                 val apiResult = newsRepository.getCategoryNews(country = country, category = category)
-                _newsCategoryLiveData.postValue(apiResult)
+                _newsCategorySharedFlow.emit(apiResult)
             } else {
-                _newsCategoryLiveData.postValue(Resource.Error(message = "Internet not available"))
+                _newsCategorySharedFlow.emit(Resource.Error(message = "Internet not available"))
             }
         } catch (e: Exception) {
-            _newsCategoryLiveData.postValue(Resource.Error(e.message.toString()))
+            _newsCategorySharedFlow.emit(Resource.Error(e.message.toString()))
         }
     }
 

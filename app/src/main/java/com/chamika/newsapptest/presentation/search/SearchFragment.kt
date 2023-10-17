@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import com.chamika.newsapptest.presentation.adapter.NewsCategoryListItemAdapter
 import com.chamika.newsapptest.presentation.adapter.NewsSearchListItemAdapter
 import com.chamika.newsapptest.presentation.utils.Constant
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : BaseFragment() {
@@ -70,42 +72,45 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun bindResponseData() {
+        viewLifecycleOwner.lifecycleScope.launch {
 
-        viewModel.newsSearchLiveData.observe(viewLifecycleOwner) { categoryDataResponse ->
-            categoryDataResponse.data?.status?.let { responseStatus ->
-                if (responseStatus == "ok") {
-                    when (categoryDataResponse) {
-                        is Resource.Loading -> {
-                            binding.allNewsProgressBar.visibility = View.VISIBLE
-                        }
-                        is Resource.Success -> {
-                            binding.allNewsProgressBar.visibility = View.GONE
-                            categoryDataResponse.data.articles?.let {
-                                if (BuildConfig.DEBUG)
-                                    Log.e(TAG, "onViewCreated: ${it.size}")
-                                binding.tvSearchCount.text =
-                                    "About ${it.size} results for ${binding.etSearch.text}"
+            viewModel.newsSearchSharedFlow.collect{ categoryDataResponse ->
+                categoryDataResponse.data?.status?.let { responseStatus ->
+                    if (responseStatus == "ok") {
+                        when (categoryDataResponse) {
+                            is Resource.Loading -> {
+                                binding.allNewsProgressBar.visibility = View.VISIBLE
+                            }
+                            is Resource.Success -> {
+                                binding.allNewsProgressBar.visibility = View.GONE
+                                categoryDataResponse.data.articles?.let {
+                                    if (BuildConfig.DEBUG)
+                                        Log.e(TAG, "onViewCreated: ${it.size}")
+                                    binding.tvSearchCount.text =
+                                        "About ${it.size} results for ${binding.etSearch.text}"
 
-                                newsSearchAdapter.setItemList(list = it)
+                                    newsSearchAdapter.setItemList(list = it)
+                                }
+                            }
+                            is Resource.Error -> {
+                                binding.allNewsProgressBar.visibility = View.GONE
+                                Toast.makeText(
+                                    requireContext(),
+                                    categoryDataResponse.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
-                        is Resource.Error -> {
-                            binding.allNewsProgressBar.visibility = View.GONE
-                            Toast.makeText(
-                                requireContext(),
-                                categoryDataResponse.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            categoryDataResponse.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        categoryDataResponse.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
+
         }
     }
 
