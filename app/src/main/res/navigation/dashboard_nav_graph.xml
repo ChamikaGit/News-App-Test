@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.chamika.newsapptest.presentation.dashboard.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_newsDetailsFragment"
+            app:destination="@id/newsDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_hotNewsFragment"
+            app:destination="@id/hotNewsFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.chamika.newsapptest.presentation.dashboard.favourite.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.chamika.newsapptest.presentation.dashboard.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.chamika.newsapptest.presentation.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <argument
+            android:name="search_text"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue='""' />
+        <action
+            android:id="@+id/action_searchFragment_to_newsDetailsFragment"
+            app:destination="@id/newsDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newsDetailsFragment"
+        android:name="com.chamika.newsapptest.presentation.details.NewsDetailsFragment"
+        android:label="fragment_news_details"
+        tools:layout="@layout/fragment_news_details" >
+        <argument
+            android:name="news_article"
+            app:argType="com.chamika.newsapptest.data.models.ArticleX"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/hotNewsFragment"
+        android:name="com.chamika.newsapptest.presentation.hotnews.HotNewsFragment"
+        android:label="fragment_hot_news"
+        tools:layout="@layout/fragment_hot_news" >
+        <argument
+            android:name="news_article_list"
+            app:argType="com.chamika.newsapptest.data.models.HotNews"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+        <action
+            android:id="@+id/action_hotNewsFragment_to_newsDetailsFragment"
+            app:destination="@id/newsDetailsFragment" />
+    </fragment>
+
+</navigation>

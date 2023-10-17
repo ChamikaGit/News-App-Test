@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tv_register">Register</string>
+    <string name="tv_password">Password</string>
+    <string name="tv_email">Email</string>
+    <string name="tv_username">Username</string>
+    <string name="tv_registration">Registration</string>
+    <string name="tv_login">Login</string>
+    <string name="tv_search_news">Search news..</string>
+    <string name="tv_hot_updates">Hot Updates</string>
+    <string name="tv_latest_news">Latest News</string>
+    <string name="tv_see_all">See All</string>
+</resources>
