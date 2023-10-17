@@ -6,8 +6,8 @@ Welcome to News App! This Android project is built with modern technologies and 
 
 
 #Tech Stack
-MVVM Architecture
-Dagger Hilt
-Coroutines
-Kotlin
-Coil
+#MVVM Architecture
+#Dagger Hilt
+#Coroutines
+#Kotlin
+#Coil
