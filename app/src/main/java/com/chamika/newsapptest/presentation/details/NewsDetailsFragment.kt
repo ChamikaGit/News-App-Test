@@ -1,32 +1,85 @@
 package com.chamika.newsapptest.presentation.details
 
-import androidx.lifecycle.ViewModelProvider
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.chamika.newsapptest.R
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import coil.load
+import com.chamika.newsapptest.databinding.FragmentNewsDetailsBinding
+import com.chamika.newsapptest.presentation.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import jp.wasabeef.blurry.Blurry
 
-class NewsDetailsFragment : Fragment() {
+@AndroidEntryPoint
+class NewsDetailsFragment : BaseFragment() {
 
-    companion object {
-        fun newInstance() = NewsDetailsFragment()
-    }
+    private var _binding: FragmentNewsDetailsBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: NewsDetailsViewModel by viewModels()
+    private val args: NewsDetailsFragmentArgs by navArgs()
 
-    private lateinit var viewModel: NewsDetailsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_news_details, container, false)
+        _binding = FragmentNewsDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(NewsDetailsViewModel::class.java)
-        // TODO: Use the ViewModel
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        Blurry.with(context)
+            .radius(10)
+            .sampling(8)
+            .color(Color.argb(245f, 245f, 245f, 0.5f))
+            .async()
+            .animate(500)
+            .onto(binding.detailsContainer)
+
+        binding.relBackContainer.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        args.newsArticle?.let { articleItems ->
+
+            articleItems.urlToImage?.let {
+                binding.imgHeadNews.load(
+                    it
+                ) {
+                    crossfade(true)
+                }
+            }
+
+            articleItems.publishedAt?.let {
+                binding.tvDate.text = it
+            }
+
+            articleItems.description?.let {
+                binding.tvTitle.text = it
+            }
+
+            articleItems.author?.let {
+                binding.tvTitle.text = "Published by $it"
+            }
+
+            articleItems.content?.let {
+                binding.tvNewsDescription.text = it
+            }
+
+
+
+        }
+
+
     }
 
 }

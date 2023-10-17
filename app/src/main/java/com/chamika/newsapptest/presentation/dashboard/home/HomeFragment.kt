@@ -18,6 +18,7 @@ import com.chamika.newsapptest.presentation.BaseFragment
 import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsCategoryListItemAdapter
 import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsHeaderListItemAdapter
 import com.chamika.newsapptest.presentation.dashboard.home.adapter.NewsSearchListItemAdapter
+import com.chamika.newsapptest.presentation.utils.Constant
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -58,7 +59,10 @@ class HomeFragment : BaseFragment() {
     private fun searchNavigation() {
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+                val bundle = Bundle().apply {
+                    putString(Constant.searchText, binding.etSearch.text.toString().trim())
+                }
+                findNavController().navigate(R.id.action_homeFragment_to_searchFragment,bundle)
             }
             true
         }
@@ -140,10 +144,19 @@ class HomeFragment : BaseFragment() {
     private fun iniRecyclerView() {
         newsAdapter = NewsHeaderListItemAdapter(context = requireActivity(), clickListener = {
 
+            val bundle = Bundle().apply {
+                putSerializable(Constant.article, it)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_newsDetailsFragment,bundle)
+
         })
 
         newsSearchAdapter = NewsSearchListItemAdapter(context = requireActivity(), clickListener = {
 
+            val bundle = Bundle().apply {
+                putSerializable(Constant.article, it)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_newsDetailsFragment,bundle)
         })
 
         newsCategoryListItemAdapter =

@@ -46,6 +46,7 @@
             tools:listitem="@layout/list_item_categories"/>
 
         <TextView
+            android:id="@+id/tvSearchCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -53,7 +54,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textColor="@color/tv_color"
             android:textStyle="bold"/>
 
         <androidx.core.widget.NestedScrollView
